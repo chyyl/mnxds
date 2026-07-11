@@ -1,4 +1,4 @@
-name: Download Dependencies Only
+name: Download Dependencies
 
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
       - name: 设置 Gradle 执行权限
         run: chmod +x gradlew
 
-      - name: 下载所有依赖（不构建JAR）
+      - name: 下载所有依赖
         run: ./gradlew build --no-daemon
 
       - name: 打包 Gradle 缓存
