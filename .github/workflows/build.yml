@@ -1,8 +1,6 @@
-name: Build and Cache Dependencies
+name: Download Dependencies Only
 
 on:
-  push:
-    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -22,20 +20,14 @@ jobs:
       - name: 设置 Gradle 执行权限
         run: chmod +x gradlew
 
-      - name: 构建模组（下载所有依赖）
+      - name: 下载所有依赖（不构建JAR）
         run: ./gradlew build --no-daemon
 
-      - name: 打包 Gradle 缓存（用于本地初始化）
+      - name: 打包 Gradle 缓存
         run: tar -czf gradle-caches.tar.gz ~/.gradle/caches/
 
-      - name: 上传缓存文件（给本地用）
+      - name: 上传缓存
         uses: actions/upload-artifact@v4
         with:
           name: gradle-caches
           path: gradle-caches.tar.gz
-
-      - name: 上传模组 JAR（成品）
-        uses: actions/upload-artifact@v4
-        with:
-          name: mod-jar
-          path: build/libs/*.jar
