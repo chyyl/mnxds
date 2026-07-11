@@ -1,4 +1,4 @@
-name: Build MCreator Mod
+name: Build and Cache Dependencies
 
 on:
   push:
@@ -22,10 +22,19 @@ jobs:
       - name: 设置 Gradle 执行权限
         run: chmod +x gradlew
 
-      - name: 构建模组
+      - name: 构建模组（下载所有依赖）
         run: ./gradlew build --no-daemon
 
-      - name: 上传构建产物
+      - name: 打包 Gradle 缓存（用于本地初始化）
+        run: tar -czf gradle-caches.tar.gz ~/.gradle/caches/
+
+      - name: 上传缓存文件（给本地用）
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-caches
+          path: gradle-caches.tar.gz
+
+      - name: 上传模组 JAR（成品）
         uses: actions/upload-artifact@v4
         with:
           name: mod-jar
