@@ -1,0 +1,33 @@
+name: Generate Gradle Cache
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: 设置 Gradle 执行权限
+        run: chmod +x gradlew
+
+      - name: 下载所有依赖并强制刷新
+        run: ./gradlew build --no-daemon --refresh-dependencies
+
+      - name: 打包 Gradle 缓存
+        run: tar -czf gradle-caches.tar.gz ~/.gradle/caches/
+
+      - name: 上传缓存
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-caches
+          path: gradle-caches.tar.gz
