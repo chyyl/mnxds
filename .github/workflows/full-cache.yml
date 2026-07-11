@@ -6,8 +6,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      GRADLE_USER_HOME: ~/.mcreator/gradle   # 与本地 MCreator 使用的 Gradle 用户目录一致
 
     steps:
       - name: 检出代码
@@ -26,7 +24,7 @@ jobs:
         run: ./gradlew build prepareClientRun --no-daemon --refresh-dependencies
 
       - name: 打包 Gradle 缓存
-        run: tar -czf gradle-caches.tar.gz -C ~/.mcreator/gradle caches
+        run: tar -czf gradle-caches.tar.gz -C ~/.gradle caches
 
       - name: 上传缓存
         uses: actions/upload-artifact@v4
